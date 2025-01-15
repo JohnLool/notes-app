@@ -2,8 +2,8 @@ from typing import List
 
 from fastapi import APIRouter, Depends
 
-from app.crud import create_user, get_all_users, get_user_by_id
-from app.schemas import SUserCreate, SUser, SUserGet
+from app.users.crud import create_user, get_all_users, get_user_by_id, update_user
+from app.users.schemas import SUserCreate, SUser, SUserGet, SUserUpdate
 
 router = APIRouter()
 
@@ -21,4 +21,9 @@ async def get_all_users_endpoint():
 @router.get("/users/{user_id}/", response_model=SUserGet)
 async def get_user_by_id_endpoint(user_id: int):
     user = await get_user_by_id(user_id)
+    return user
+
+@router.put("/users/{user_id}/", response_model=SUserUpdate)
+async def update_user_endpoint(user_id: int, user_data: SUserUpdate):
+    user = await update_user(user_id, user_data)
     return user

@@ -3,11 +3,11 @@ import asyncio
 from fastapi import FastAPI
 
 from app.database import create_db
-from app.routers import users
+from app.users.router import router
 
 app = FastAPI()
 
-app.include_router(users.router)
+app.include_router(router)
 
 
 async def main():
