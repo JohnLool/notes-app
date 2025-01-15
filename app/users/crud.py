@@ -8,6 +8,20 @@ from app.utils import hash_password
 
 
 async def create_user(user: SUserCreate):
+    existing_user_by_username = await get_user_by_username(user.username)
+    if existing_user_by_username:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Username already exists"
+        )
+
+    existing_user_by_email = await get_user_by_email(user.email)
+    if existing_user_by_email:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email already exists"
+        )
+
     async with session_factory() as session:
         user_to_add = UserOrm(
             username=user.username,
@@ -40,14 +54,13 @@ async def get_all_users():
 async def get_user_by_username(username: str):
     async with session_factory() as session:
         result = await session.execute(select(UserOrm).filter(UserOrm.username == username))
-        user = result.scalar_one_or_none()
-        if user is None:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"User with username '{username}' not found"
-            )
-        return user
+        return result.scalar_one_or_none()
 
+
+async def get_user_by_email(email: str):
+    async with session_factory() as session:
+        result = await session.execute(select(UserOrm).filter(UserOrm.email == email))
+        return result.scalar_one_or_none()
 
 async def update_user(user_id: int, user_data: SUserUpdate):
     async with session_factory() as session:

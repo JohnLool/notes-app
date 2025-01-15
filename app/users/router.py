@@ -2,7 +2,7 @@ from typing import List
 
 from fastapi import APIRouter, Depends
 
-from app.users.crud import create_user, get_all_users, get_user_by_id, update_user
+from app.users.crud import create_user, get_all_users, get_user_by_id, update_user, delete_user
 from app.users.schemas import SUserCreate, SUser, SUserGet, SUserUpdate
 
 router = APIRouter()
@@ -26,4 +26,9 @@ async def get_user_by_id_endpoint(user_id: int):
 @router.put("/users/{user_id}/", response_model=SUserUpdate)
 async def update_user_endpoint(user_id: int, user_data: SUserUpdate):
     user = await update_user(user_id, user_data)
+    return user
+
+@router.delete("/users/{user_id}/", status_code=204)
+async def delete_user_endpoint(user_id: int):
+    user = await delete_user(user_id)
     return user
