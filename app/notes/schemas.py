@@ -1,9 +1,9 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, constr
 
 
 class SNote(BaseModel):
-    title: str
-    description: str
+    title: constr(min_length=1, max_length=255)
+    description: constr(min_length=1, max_length=255)
 
 
 class SNoteGet(SNote):
@@ -11,5 +11,5 @@ class SNoteGet(SNote):
 
 
 class SNoteUpdate(SNote):
-    title: str | None = None
-    description: str | None = None
+    title: constr(min_length=1, max_length=255) | None = None
+    description: constr(min_length=1, max_length=255) | None = None

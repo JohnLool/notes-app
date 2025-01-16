@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 
 from app.notes.exception import DoNotHaveAccess, NoteDoesNotExist
 from app.notes.schemas import SNote, SNoteGet, SNoteUpdate
@@ -16,7 +16,6 @@ router = APIRouter(
 @router.post("/", response_model=SNote, status_code=201)
 async def create_note_endpoint(note: SNote, current_user_id: int):
     return await create_note(note, current_user_id)
-
 
 @router.get("/", response_model=List[SNoteGet])
 async def get_all_notes_endpoint():
