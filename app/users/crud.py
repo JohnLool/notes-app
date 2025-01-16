@@ -30,6 +30,7 @@ async def create_user(user: SUserCreate):
         await session.refresh(user_to_add)
         return user_to_add
 
+
 async def get_user_by_id(user_id: int):
     async with session_factory() as session:
         user = await session.get(UserOrm, user_id)
