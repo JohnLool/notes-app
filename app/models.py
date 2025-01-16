@@ -20,8 +20,8 @@ class UserOrm(Base):
     is_active: Mapped[bool] = mapped_column(default=True)
     is_superuser: Mapped[bool] = mapped_column(default=False)
 
-class PostOrm(Base):
-    __tablename__ = "posts"
+class NoteOrm(Base):
+    __tablename__ = "notes"
 
     id: Mapped[intpk]
     title: Mapped[str] = mapped_column(String(256))

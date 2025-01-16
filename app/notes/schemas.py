@@ -1,15 +1,15 @@
 from pydantic import BaseModel
 
 
-class SPost(BaseModel):
+class SNote(BaseModel):
     title: str
     description: str
 
 
-class SPostGet(SPost):
+class SNoteGet(SNote):
     id: int
 
 
-class SPostUpdate(SPost):
+class SNoteUpdate(SNote):
     title: str | None = None
     description: str | None = None
