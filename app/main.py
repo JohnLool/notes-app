@@ -5,10 +5,12 @@ from fastapi import FastAPI
 from app.database import create_db
 from app.users.router import router as users_router
 from app.notes.router import router as notes_router
+from app.auth.router import router as auth_router
 app = FastAPI()
 
 app.include_router(users_router)
 app.include_router(notes_router)
+app.include_router(auth_router)
 
 
 async def main():

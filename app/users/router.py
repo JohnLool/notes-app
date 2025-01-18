@@ -1,10 +1,11 @@
-from typing import List
+from typing import List, Annotated
 
 from fastapi import APIRouter, Depends, HTTPException
 
 from app.users.crud import create_user, get_all_users, get_user_by_id, update_user, delete_user
 from app.users.exceptions import UsernameAlreadyExists, EmailAlreadyExists, UserDoesNotExist
 from app.users.schemas import SUserCreate, SUser, SUserGet, SUserUpdate
+from app.auth.dependecies import get_current_user
 
 router = APIRouter(
     prefix="/users",
@@ -12,6 +13,10 @@ router = APIRouter(
     responses={404: {"description": "Not found"}}
 )
 
+
+@router.get("/me", response_model=SUserGet)
+async def read_users_me(current_user: Annotated[SUserGet, Depends(get_current_user)]):
+    return current_user
 
 @router.post("/", response_model=SUser, status_code=201)
 async def create_user_endpoint(user: SUserCreate):
