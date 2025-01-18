@@ -19,7 +19,12 @@ async def read_users_me(current_user: Annotated[SUserGet, Depends(get_current_us
     return current_user
 
 @router.post("/", response_model=SUser, status_code=201)
-async def create_user_endpoint(user: SUserCreate):
+async def create_user_endpoint(
+    user: SUserCreate,
+    current_user: Annotated[SUser, Depends(get_current_user)] = None
+):
+    if current_user:
+        raise HTTPException(status_code=403, detail="Authorized users cannot create accounts.")
     try:
         return await create_user(user)
     except UsernameAlreadyExists:
@@ -39,20 +44,19 @@ async def get_user_by_id_endpoint(user_id: int):
     except UserDoesNotExist:
         raise HTTPException(status_code=404, detail="User not found")
 
-@router.put("/{user_id}/", response_model=SUserUpdate)
-async def update_user_endpoint(user_id: int, user_data: SUserUpdate):
+@router.put("/me", response_model=SUserUpdate)
+async def update_current_user_endpoint(
+    user_data: SUserUpdate,
+    current_user: Annotated[SUserGet, Depends(get_current_user)]
+):
     try:
-        return await update_user(user_id, user_data)
-    except UserDoesNotExist:
-        raise HTTPException(status_code=404, detail="User not found")
+        return await update_user(current_user.id, user_data)
     except EmailAlreadyExists:
         raise HTTPException(status_code=400, detail="Email already exists")
     except UsernameAlreadyExists:
         raise HTTPException(status_code=400, detail="Username already exists")
 
-@router.delete("/{user_id}/", status_code=204)
-async def delete_user_endpoint(user_id: int):
-    try:
-        await delete_user(user_id)
-    except UserDoesNotExist:
-        raise HTTPException(status_code=404, detail="User not found")
+
+@router.delete("/me", status_code=204)
+async def delete_current_user_endpoint(current_user: Annotated[SUserGet, Depends(get_current_user)]):
+    await delete_user(current_user.id)
