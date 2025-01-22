@@ -8,6 +8,7 @@ class SNote(BaseModel):
 
 class SNoteGet(SNote):
     id: int
+    user_id: int
 
 
 class SNoteUpdate(SNote):

@@ -26,6 +26,12 @@ async def get_all_notes():
         return result.scalars().all()
 
 
+async def get_user_notes(user_id: int):
+    async with session_factory() as session:
+        result = await session.execute(select(NoteOrm).filter(NoteOrm.user_id == user_id))
+        return result.scalars().all()
+
+
 async def get_note_by_id(note_id: int):
     async with session_factory() as session:
         note = await session.get(NoteOrm, note_id)
