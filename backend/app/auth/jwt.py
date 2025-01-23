@@ -1,8 +1,8 @@
-import jwt
-from jwt import PyJWTError
-
 from datetime import datetime, timedelta, timezone
+
+import jwt
 from app.config import settings
+from jwt import PyJWTError
 
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):

@@ -1,9 +1,8 @@
 from datetime import datetime
-
-from sqlalchemy.orm import declarative_base, Mapped, mapped_column
-from sqlalchemy import Integer, String, func, ForeignKey
 from typing import Annotated
 
+from sqlalchemy import Integer, String, func, ForeignKey
+from sqlalchemy.orm import declarative_base, Mapped, mapped_column
 
 intpk = Annotated[int, mapped_column(Integer, primary_key=True)]
 

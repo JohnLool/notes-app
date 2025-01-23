@@ -1,17 +1,14 @@
 import asyncio
 
-from starlette.middleware.sessions import SessionMiddleware
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi import FastAPI
-
 from app.admin.views import setup_admin
-from app.config import settings
-
-from app.database import create_db
-
-from app.users.router import router as users_router
-from app.notes.router import router as notes_router
 from app.auth.router import router as auth_router
+from app.config import settings
+from app.database import create_db
+from app.notes.router import router as notes_router
+from app.users.router import router as users_router
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.sessions import SessionMiddleware
 
 app = FastAPI()
 

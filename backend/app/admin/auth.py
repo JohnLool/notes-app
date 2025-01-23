@@ -1,8 +1,7 @@
-from sqladmin.authentication import AuthenticationBackend
-from starlette.requests import Request
-
 from app.users.crud import get_user_by_username
 from app.utils import verify_password
+from sqladmin.authentication import AuthenticationBackend
+from starlette.requests import Request
 
 
 class AdminAuth(AuthenticationBackend):

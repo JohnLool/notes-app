@@ -1,12 +1,11 @@
 from typing import Annotated, List
 
-from fastapi import APIRouter, Depends, HTTPException, status
-
 from app.auth.dependecies import get_current_user, get_optional_user
+from app.notes.crud import create_note, get_all_notes, update_note, delete_note, get_note_by_id, get_user_notes
 from app.notes.exception import DoNotHaveAccess, NoteDoesNotExist
 from app.notes.schemas import SNote, SNoteGet, SNoteUpdate
-from app.notes.crud import create_note, get_all_notes, update_note, delete_note, get_note_by_id, get_user_notes
 from app.users.schemas import SUserGet
+from fastapi import APIRouter, Depends, HTTPException
 
 router = APIRouter(
     prefix="/notes",

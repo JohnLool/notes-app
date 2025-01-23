@@ -1,11 +1,10 @@
-from sqlalchemy import select
-from sqlalchemy.exc import IntegrityError
-
 from app.database import session_factory
 from app.models import UserOrm
 from app.users.exceptions import UsernameAlreadyExists, EmailAlreadyExists, UserDoesNotExist
 from app.users.schemas import SUserCreate, SUserUpdate
 from app.utils import hash_password
+from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 
 
 async def create_user(user: SUserCreate):

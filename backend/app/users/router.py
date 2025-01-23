@@ -1,11 +1,10 @@
 from typing import List, Annotated, Optional
 
-from fastapi import APIRouter, Depends, HTTPException
-
+from app.auth.dependecies import get_current_user, get_optional_user
 from app.users.crud import create_user, get_all_users, get_user_by_id, update_user, delete_user
 from app.users.exceptions import UsernameAlreadyExists, EmailAlreadyExists, UserDoesNotExist
 from app.users.schemas import SUserCreate, SUser, SUserGet, SUserUpdate
-from app.auth.dependecies import get_current_user, get_optional_user
+from fastapi import APIRouter, Depends, HTTPException
 
 router = APIRouter(
     prefix="/users",

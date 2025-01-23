@@ -1,12 +1,10 @@
-from fastapi import FastAPI
-from sqladmin import Admin, ModelView
-from starlette.requests import Request
-
 from app.admin.auth import AdminAuth
 from app.config import settings
 from app.database import engine
 from app.models import UserOrm, NoteOrm
-
+from fastapi import FastAPI
+from sqladmin import Admin, ModelView
+from starlette.requests import Request
 
 
 class UserAdmin(ModelView, model=UserOrm):
