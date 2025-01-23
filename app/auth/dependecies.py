@@ -6,7 +6,6 @@ from typing import Annotated, Optional
 
 from app.users.crud import get_user_by_email
 
-
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
 oauth2_scheme_optional = OAuth2PasswordBearer(tokenUrl="auth/token", auto_error=False)
 
