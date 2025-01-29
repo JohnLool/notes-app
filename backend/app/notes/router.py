@@ -14,12 +14,12 @@ router = APIRouter(
 )
 
 
-@router.post("/", response_model=SNote, status_code=201)
+@router.post("", response_model=SNote, status_code=201)
 async def create_note_endpoint(note: SNote, current_user: Annotated[SUserGet, Depends(get_current_user)]):
     return await create_note(note, current_user.id)
 
 
-@router.get("/", response_model=List[SNoteGet])
+@router.get("", response_model=List[SNoteGet])
 async def get_notes_endpoint(
         current_user: Annotated[SUserGet, Depends(get_optional_user)],
         owner: str = None

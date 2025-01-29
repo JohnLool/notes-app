@@ -18,7 +18,7 @@ async def read_users_me(current_user: Annotated[SUserGet, Depends(get_current_us
     return current_user
 
 
-@router.post("/", response_model=SUser, status_code=201)
+@router.post("", response_model=SUser, status_code=201)
 async def create_user_endpoint(
         user: SUserCreate,
         current_user: Optional[SUser] = Depends(get_optional_user)
@@ -33,13 +33,13 @@ async def create_user_endpoint(
         raise HTTPException(status_code=400, detail="Email already exists")
 
 
-@router.get("/", response_model=List[SUserGet])
+@router.get("", response_model=List[SUserGet])
 async def get_all_users_endpoint():
     users = await get_all_users()
     return users
 
 
-@router.get("/{user_id}/", response_model=SUserGet)
+@router.get("/{user_id}", response_model=SUserGet)
 async def get_user_by_id_endpoint(user_id: int):
     try:
         return await get_user_by_id(user_id)
