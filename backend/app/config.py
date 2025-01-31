@@ -13,6 +13,8 @@ class Settings(BaseSettings):
     JWT_SECRET_KEY: str
 
     ADMIN_AUTH_SECRET_KEY: str
+    CACHE_PREFIX: str
+    REDIS_URL: str
 
     @property
     def database_url(self):

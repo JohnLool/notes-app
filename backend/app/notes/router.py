@@ -6,6 +6,8 @@ from app.notes.exception import DoNotHaveAccess, NoteDoesNotExist
 from app.notes.schemas import SNote, SNoteGet, SNoteUpdate
 from app.users.schemas import SUserGet
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi_cache.decorator import cache
+
 
 router = APIRouter(
     prefix="/notes",
@@ -20,6 +22,7 @@ async def create_note_endpoint(note: SNote, current_user: Annotated[SUserGet, De
 
 
 @router.get("", response_model=List[SNoteGet])
+@cache(expire=300)
 async def get_notes_endpoint(
         current_user: Annotated[SUserGet, Depends(get_optional_user)],
         owner: str = None

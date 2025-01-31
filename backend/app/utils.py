@@ -1,4 +1,7 @@
 import bcrypt
+from fastapi_cache import FastAPICache
+from fastapi import Request
+from typing import Any
 
 
 def hash_password(password: str) -> str:
