@@ -13,6 +13,12 @@ from app.notes.router import router as notes_router
 from app.users.router import router as users_router
 from app.cache import init_cache
 
+import logging
+
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logger = logging.getLogger(__name__)
+
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
@@ -22,6 +28,7 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+logger.info("Приложение запущено!")
 
 app.add_middleware(
     CORSMiddleware,

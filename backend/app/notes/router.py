@@ -8,6 +8,10 @@ from app.users.schemas import SUserGet
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi_cache.decorator import cache
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 router = APIRouter(
     prefix="/notes",
@@ -16,7 +20,7 @@ router = APIRouter(
 )
 
 
-@router.post("", response_model=SNote, status_code=201)
+@router.post("", response_model=SNoteGet, status_code=201)
 async def create_note_endpoint(note: SNote, current_user: Annotated[SUserGet, Depends(get_current_user)]):
     return await create_note(note, current_user.id)
 
@@ -27,6 +31,8 @@ async def get_notes_endpoint(
         current_user: Annotated[SUserGet, Depends(get_optional_user)],
         owner: str = None
 ):
+    logger.info(f"Запрос в get_notes_endpoint: owner={owner}, current_user={current_user.id if current_user else 'Гость'}")
+
     if owner == 'me' and current_user is not None:
         return await get_user_notes(current_user.id)
     elif owner is None:

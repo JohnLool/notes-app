@@ -21,6 +21,6 @@ async def init_cache():
     redis = aioredis.from_url(settings.REDIS_URL, encoding="utf-8", decode_responses=True)
     FastAPICache.init(
         RedisBackend(redis),
-        prefix=settings.REDIS_PREFIX,
+        prefix=settings.CACHE_PREFIX,
         key_builder=custom_key_builder
     )
