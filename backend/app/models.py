@@ -25,6 +25,7 @@ class NoteOrm(Base):
     id: Mapped[intpk]
     title: Mapped[str] = mapped_column(String(256))
     description: Mapped[str] = mapped_column(String(256))
+    public: Mapped[bool] = mapped_column(default=False)
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
     created_at: Mapped[datetime] = mapped_column(default=func.now())
     updated_at: Mapped[datetime] = mapped_column(default=func.now(), onupdate=func.now())

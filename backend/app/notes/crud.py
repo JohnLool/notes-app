@@ -26,6 +26,12 @@ async def get_all_notes():
         return result.scalars().all()
 
 
+async def get_all_public_notes():
+    async with session_factory() as session:
+        result = await session.execute(select(NoteOrm).filter(NoteOrm.public is True))
+        return result.scalars().all()
+
+
 async def get_user_notes(user_id: int):
     async with session_factory() as session:
         result = await session.execute(select(NoteOrm).filter(NoteOrm.user_id == user_id))
@@ -66,3 +72,5 @@ async def delete_note(note_id: int, user_id: int):
         await session.delete(note_to_delete)
         await session.commit()
         return note_to_delete
+
+
