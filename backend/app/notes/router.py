@@ -6,7 +6,7 @@ from app.notes.exception import DoNotHaveAccess, NoteDoesNotExist
 from app.notes.schemas import SNote, SNoteGet, SNoteUpdate
 from app.users.schemas import SUserGet
 from fastapi import APIRouter, Depends, HTTPException
-from fastapi_cache.decorator import cache
+
 
 import logging
 
@@ -26,51 +26,13 @@ async def create_note_endpoint(note: SNote, current_user: Annotated[SUserGet, De
 
 
 @router.get("", response_model=List[SNoteGet])
-async def get_notes_endpoint(
-        current_user: Annotated[SUserGet, Depends(get_optional_user)],
-        owner: str = None
-):
-    logger.info(f"Запрос в get_notes_endpoint: owner={owner}, current_user={current_user.id if current_user else 'Гость'}")
-
-    if owner == 'me' and current_user is not None:
-        return await get_user_notes(current_user.id)
-    elif owner is None:
-        return await get_all_notes()
-    elif owner.isdigit():
-        return await get_user_notes(int(owner))
-    else:
-        return await get_all_notes()
+async def get_notes_test_endpoint():
+    return await get_all_notes()
 
 
 @router.get("/{note_id}", response_model=SNoteGet)
 async def get_note_by_id_endpoint(note_id: int):
     try:
         return await get_note_by_id(note_id)
-    except NoteDoesNotExist:
-        raise HTTPException(status_code=404, detail="Note not found")
-
-
-@router.put("/{note_id}", response_model=SNoteGet, status_code=201)
-async def update_note_endpoint(
-        note_id: int,
-        note_new: SNoteUpdate,
-        current_user: Annotated[SUserGet, Depends(get_current_user)]
-):
-    try:
-        return await update_note(note_id, note_new, current_user.id)
-    except DoNotHaveAccess:
-        raise HTTPException(status_code=403, detail="Access Denied")
-    except NoteDoesNotExist:
-        raise HTTPException(status_code=404, detail="Note not found")
-
-
-@router.delete("/{note_id}", status_code=204)
-async def delete_note_endpoint(note_id: int,
-                               current_user: Annotated[SUserGet, Depends(get_current_user)]
-                               ):
-    try:
-        return await delete_note(note_id, current_user.id)
-    except DoNotHaveAccess:
-        raise HTTPException(status_code=403, detail="Access Denied")
     except NoteDoesNotExist:
         raise HTTPException(status_code=404, detail="Note not found")

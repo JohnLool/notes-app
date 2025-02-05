@@ -1,6 +1,8 @@
 from typing import List, Annotated, Optional
 
 from app.auth.dependecies import get_current_user, get_optional_user
+from app.notes.crud import get_user_notes
+from app.notes.schemas import SNoteGet
 from app.users.crud import create_user, get_all_users, get_user_by_id, update_user, delete_user
 from app.users.exceptions import UsernameAlreadyExists, EmailAlreadyExists, UserDoesNotExist
 from app.users.schemas import SUserCreate, SUser, SUserGet, SUserUpdate
@@ -13,9 +15,12 @@ router = APIRouter(
 )
 
 
-@router.get("/me", response_model=SUserGet)
-async def read_users_me(current_user: Annotated[SUserGet, Depends(get_current_user)]):
-    return current_user
+@router.get("/{user_id}/notes", response_model=List[SNoteGet])
+async def get_user_notes_endpoint(user_id: int):
+    notes = await get_user_notes(user_id)
+    if not notes:
+        raise HTTPException(status_code=404, detail="Notes not found")
+    return notes
 
 
 @router.post("", response_model=SUser, status_code=201)
@@ -45,21 +50,3 @@ async def get_user_by_id_endpoint(user_id: int):
         return await get_user_by_id(user_id)
     except UserDoesNotExist:
         raise HTTPException(status_code=404, detail="User not found")
-
-
-@router.put("/me", response_model=SUserUpdate)
-async def update_current_user_endpoint(
-    user_data: SUserUpdate,
-    current_user: Annotated[SUserGet, Depends(get_current_user)]
-):
-    try:
-        return await update_user(current_user.id, user_data)
-    except EmailAlreadyExists:
-        raise HTTPException(status_code=400, detail="Email already exists")
-    except UsernameAlreadyExists:
-        raise HTTPException(status_code=400, detail="Username already exists")
-
-
-@router.delete("/me", status_code=204)
-async def delete_current_user_endpoint(current_user: Annotated[SUserGet, Depends(get_current_user)]):
-    await delete_user(current_user.id)

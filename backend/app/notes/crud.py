@@ -1,3 +1,5 @@
+from fastapi import HTTPException
+
 from app.database import session_factory
 from app.models import NoteOrm
 from app.notes.exception import NoteDoesNotExist, DoNotHaveAccess
@@ -5,12 +7,16 @@ from app.notes.schemas import SNote
 
 from sqlalchemy import select
 
+from app.users.crud import get_user_by_id
+from app.users.exceptions import UserDoesNotExist
+
 
 async def create_note(note: SNote, user_id: int):
     async with session_factory() as session:
         note_to_add = NoteOrm(
             title=note.title,
             description=note.description,
+            public=note.public,
             user_id=user_id,
         )
 
@@ -28,14 +34,18 @@ async def get_all_notes():
 
 async def get_all_public_notes():
     async with session_factory() as session:
-        result = await session.execute(select(NoteOrm).filter(NoteOrm.public is True))
+        result = await session.execute(select(NoteOrm).filter(NoteOrm.public == True))
         return result.scalars().all()
 
 
 async def get_user_notes(user_id: int):
     async with session_factory() as session:
-        result = await session.execute(select(NoteOrm).filter(NoteOrm.user_id == user_id))
-        return result.scalars().all()
+        try:
+            await get_user_by_id(user_id)
+            result = await session.execute(select(NoteOrm).filter(NoteOrm.user_id == user_id))
+            return result.scalars().all()
+        except UserDoesNotExist:
+            raise HTTPException(status_code=404, detail="User not found")
 
 
 async def get_note_by_id(note_id: int):
