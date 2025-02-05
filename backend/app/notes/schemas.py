@@ -4,6 +4,7 @@ from pydantic import BaseModel, constr
 class SNote(BaseModel):
     title: constr(min_length=1, max_length=255)
     description: constr(min_length=1, max_length=255)
+    public: bool
 
 
 class SNoteGet(SNote):

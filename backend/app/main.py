@@ -8,6 +8,8 @@ from app.admin.views import setup_admin
 from app.config import settings
 from app.database import create_db
 
+from app.users.user_profile.router import router as user_profile_router
+from app.feed.router import router as feed_router
 from app.auth.router import router as auth_router
 from app.notes.router import router as notes_router
 from app.users.router import router as users_router
@@ -23,7 +25,7 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     await create_db()
-    await init_cache()
+    # await init_cache()
     yield
 
 
@@ -42,6 +44,9 @@ setup_admin(app)
 app.include_router(users_router)
 app.include_router(notes_router)
 app.include_router(auth_router)
+app.include_router(feed_router)
+app.include_router(user_profile_router)
+
 
 app.add_middleware(
     SessionMiddleware,
