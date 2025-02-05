@@ -13,7 +13,7 @@ from app.feed.router import router as feed_router
 from app.auth.router import router as auth_router
 from app.notes.router import router as notes_router
 from app.users.router import router as users_router
-from app.cache import init_cache
+
 
 import logging
 
@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    await create_db()
+    # await create_db()
     # await init_cache()
     yield
 

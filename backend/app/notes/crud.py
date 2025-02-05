@@ -48,6 +48,17 @@ async def get_user_notes(user_id: int):
             raise HTTPException(status_code=404, detail="User not found")
 
 
+async def get_user_public_notes(user_id: int):
+    async with session_factory() as session:
+        try:
+            await get_user_by_id(user_id)
+            result = await session.execute(select(NoteOrm).filter(NoteOrm.user_id == user_id).filter(NoteOrm.public == True))
+            return result.scalars().all()
+        except UserDoesNotExist:
+            raise HTTPException(status_code=404, detail="User not found")
+
+
+
 async def get_note_by_id(note_id: int):
     async with session_factory() as session:
         note = await session.get(NoteOrm, note_id)

@@ -1,12 +1,13 @@
 from typing import List, Annotated, Optional
 
 from app.auth.dependecies import get_current_user, get_optional_user
-from app.notes.crud import get_user_notes
+from app.notes.crud import get_user_notes, get_user_public_notes
 from app.notes.schemas import SNoteGet
 from app.users.crud import create_user, get_all_users, get_user_by_id, update_user, delete_user
 from app.users.exceptions import UsernameAlreadyExists, EmailAlreadyExists, UserDoesNotExist
 from app.users.schemas import SUserCreate, SUser, SUserGet, SUserUpdate
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.responses import RedirectResponse
 
 router = APIRouter(
     prefix="/users",
@@ -16,8 +17,15 @@ router = APIRouter(
 
 
 @router.get("/{user_id}/notes", response_model=List[SNoteGet])
-async def get_user_notes_endpoint(user_id: int):
-    notes = await get_user_notes(user_id)
+async def get_user_notes_endpoint(
+        user_id: int,
+        current_user: Optional[SUserGet] = Depends(get_optional_user)
+):
+    notes = await get_user_public_notes(user_id)
+
+    if current_user is not None and current_user.id == user_id:
+        return RedirectResponse(url="/me/notes", status_code=307)
+
     if not notes:
         raise HTTPException(status_code=404, detail="Notes not found")
     return notes
