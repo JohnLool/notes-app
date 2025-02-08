@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 
 from app.admin.views import setup_admin
+from app.cache import init_cache
 from app.config import settings
 from app.database import create_db
 
@@ -25,7 +26,7 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     # await create_db()
-    # await init_cache()
+    await init_cache()
     yield
 
 

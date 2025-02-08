@@ -10,8 +10,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import RedirectResponse
 
 router = APIRouter(
-    prefix="/users",
-    tags=["users"],
+    prefix="/user",
+    tags=["user"],
     responses={404: {"description": "Not found"}}
 )
 
@@ -24,7 +24,7 @@ async def get_user_notes_endpoint(
     notes = await get_user_public_notes(user_id)
 
     if current_user is not None and current_user.id == user_id:
-        return RedirectResponse(url="/me/notes", status_code=307)
+        return RedirectResponse(url="/profile/notes", status_code=307)
 
     if not notes:
         raise HTTPException(status_code=404, detail="Notes not found")
@@ -47,7 +47,7 @@ async def create_user_endpoint(
 
 
 @router.get("", response_model=List[SUserGet])
-async def get_all_users_endpoint():
+async def get_all_users_test_endpoint():
     users = await get_all_users()
     return users
 

@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List, Annotated
+from fastapi_cache.decorator import cache
 
 from app.auth.dependecies import get_current_user
 from app.notes.crud import get_user_notes, delete_note, update_note
@@ -10,7 +11,7 @@ from app.users.exceptions import EmailAlreadyExists, UsernameAlreadyExists
 from app.users.schemas import SUserGet, SUserUpdate
 
 router = APIRouter(
-    prefix="/me",
+    prefix="/profile",
     tags=["user_profile"],
 )
 
